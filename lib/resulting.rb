@@ -1,5 +1,6 @@
 require "resulting/version"
 require "resulting/configuration"
+require "resulting/helpers"
 require "resulting/resultable"
 require "resulting/result"
 
