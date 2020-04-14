@@ -16,7 +16,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Layout/LineLength:
-  Max: 100
+  Max: 110
   Exclude:
     - Rakefile
 

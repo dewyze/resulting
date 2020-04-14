@@ -1,7 +1,7 @@
 module Resulting
   module Runner
-    def self.call(result, method:, failure_case: -> { false }, wrapper: ->(&blk) { blk.call })
-      Resulting.call(result, wrapper: wrapper) do
+    def self.run_all(result, method:, failure_case: -> { false }, wrapper: ->(&blk) { blk.call })
+      Resulting::Handler.handle(result, wrapper: wrapper) do
         new_result = result.values.reduce(true) do |success, v|
           v.send(method) ? success : false
         end
@@ -12,6 +12,16 @@ module Resulting
         end
 
         new_result ? true : failure_case.call
+      end
+    end
+
+    def self.run_until_failure(result, method:, failure_case: -> { false }, wrapper: ->(&blk) { blk.call })
+      Resulting::Handler.handle(result, wrapper: wrapper) do
+        result = result.values.all?(&method)
+
+        result &&= yield if block_given?
+
+        result ? true : failure_case.call
       end
     end
   end
