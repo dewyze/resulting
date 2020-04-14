@@ -53,6 +53,9 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Enabled: false
 
+RSpec/NestedGroups:
+  Max: 4
+
 RSpec/NotToNot:
   EnforcedStyle: to_not
 

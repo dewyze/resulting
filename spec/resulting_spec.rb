@@ -15,6 +15,7 @@ RSpec.describe Resulting do
     let(:result) { test_class.new(success, object) }
 
     let(:blk) { -> { block_success } }
+    let(:block_success) { [true, false].sample }
 
     context "with a failing result" do
       let(:success) { false }
@@ -33,7 +34,6 @@ RSpec.describe Resulting do
 
     context "with a successful result" do
       let(:success) { true }
-      let(:block_success) { [true, false].sample }
 
       it "returns a success with the same class" do
         result = run
@@ -51,7 +51,6 @@ RSpec.describe Resulting do
     context "with an object" do
       let(:result) { object }
       let(:success) { true }
-      let(:block_success) { [true, false].sample }
 
       it "returns a success" do
         result = run
@@ -63,6 +62,37 @@ RSpec.describe Resulting do
 
       it "does call the block" do
         expect { |blk| described_class.call(result, &blk) }.to yield_control
+      end
+    end
+
+    context "with a wrapper" do
+      subject(:run) { described_class.call(result, wrapper: wrapper, &blk) }
+
+      let(:wrapper) { ->(&blk) { return blk.call } }
+
+      context "with a successful param" do
+        let(:success) { true }
+        let(:block_success) { true }
+
+        it "calls the block" do
+          expect(wrapper).to receive(:call).and_call_original
+
+          result = run
+
+          expect(result).to be_success
+        end
+      end
+
+      context "with a failing param" do
+        let(:success) { false }
+
+        it "calls the block" do
+          expect(wrapper).to receive(:call).and_call_original
+
+          result = run
+
+          expect(result).to be_failure
+        end
       end
     end
   end
