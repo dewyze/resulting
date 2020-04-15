@@ -7,7 +7,7 @@ module Resulting
 
     def initialize(success, value)
       @success = success
-      @value = value.is_a?(self.class) ? value.value : value
+      @value = value.is_a?(Resulting::Resultable) ? value.value : value
     end
 
     def success?
