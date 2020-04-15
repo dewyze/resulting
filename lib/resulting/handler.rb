@@ -1,20 +1,16 @@
 module Resulting
   module Handler
+    include Resulting::Helpers
+
     def self.handle(result_or_value, wrapper: ->(&blk) { return blk.call })
       wrapper.call do
-        if result_or_value.is_a?(Resulting::Resultable)
-          return result_or_value if result_or_value.failure?
+        result = Resulting::Result.wrap(result_or_value)
 
-          value =  result_or_value.value
-          klass =  result_or_value.class
-        else
-          value =  result_or_value
-          klass =  Resulting::Result
-        end
+        return result if result.failure?
 
         success = yield
 
-        klass.new(success, value)
+        result.class.new(success, result.value)
       end
     end
   end

@@ -1,7 +1,5 @@
 RSpec.describe Resulting::Resultable do
-  let(:resultable) do
-    Class.new { include Resulting::Resultable }
-  end
+  let(:resultable) { Class.new { include Resulting::Resultable } }
 
   let(:success) { [true, false].sample }
 
@@ -59,6 +57,34 @@ RSpec.describe Resulting::Resultable do
         result = run
 
         expect(result.value).to eq(object)
+      end
+    end
+  end
+
+  describe ".wrap" do
+    subject(:run) { resultable.wrap(param) }
+
+    let(:value) { Object.new }
+
+    context "with a result" do
+      let(:param) { resultable.success(value) }
+
+      it "returns the same result" do
+        result = run
+
+        expect(result.class).to eq(resultable)
+        expect(result).to eq(param)
+      end
+    end
+
+    context "with an object" do
+      let(:param) { value }
+
+      it "wraps the object in a result" do
+        result = run
+
+        expect(result.class).to eq(resultable)
+        expect(result.value).to eq(param)
       end
     end
   end

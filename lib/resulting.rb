@@ -1,8 +1,8 @@
 require "resulting/version"
 require "resulting/configuration"
-require "resulting/handler"
-require "resulting/helpers"
 require "resulting/resultable"
+require "resulting/helpers"
+require "resulting/handler"
 require "resulting/result"
 require "resulting/runner"
 

@@ -26,10 +26,6 @@ module Resulting
       end
     end
 
-    def wrap(success)
-      self.class.new(success, value)
-    end
-
     module ClassMethods
       def success(value)
         new(true, value)
@@ -37,6 +33,12 @@ module Resulting
 
       def failure(value)
         new(false, value)
+      end
+
+      def wrap(param)
+        return param if param.is_a?(Resulting::Resultable)
+
+        success(param)
       end
     end
   end
